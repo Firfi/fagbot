@@ -1,3 +1,8 @@
+/* UNWORKING
+ * UNWORKING
+ * UNWORKING
+ */
+
 /*
 * file: sock.c
 * synopsis: socket based operations
@@ -17,7 +22,6 @@ static void privmsg(const char *, char *, char *, int);
 static void joinmsg(const char *, char *, int);
 static int getl(char *);
 
-
 /*
  * Get sockaddr for ip4 or ip6 
  */
@@ -31,6 +35,10 @@ getinaddr(struct sockaddr *sa)
     
     return &(((struct sockaddr_in6 *) sa)->sin6_addr);
 }
+
+/* 
+ * Handler for main ops
+ */
 
 int
 handler(char *client, char *host, char *port)
@@ -94,7 +102,6 @@ handler(char *client, char *host, char *port)
 	printf("%s", buf);
     }
     
-    usleep(100);
     privmsg("nickserv", getpass(passbuf), sendbuf, sock);
     joinmsg(channel, sendbuf, sock);
     
