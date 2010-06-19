@@ -1,0 +1,4 @@
+So far we have a couple of files, nothing grand; All this does is connect to a specified server, so far it doesn't even PONG yet.
+It is a rewrite of an earlier attempt that had some bugs.
+
+Hope to see you fork!
