@@ -39,38 +39,36 @@ handler(char *client, char *host, char *port)
     hints.ai_socktype = SOCK_STREAM;
     
     if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
-fprintf(stderr, "[-] getaddrinfo: %s\n", gai_strerror(rv));
-return 1;
+	fprintf(stderr, "[-] getaddrinfo: %s\n", gai_strerror(rv));
+	return 1;
     }
-
+    
     /* loop through all the results, and connect to the first available */
     for (p = servinfo; p != NULL; p = p->ai_next) {
-if ((sock = socket(p->ai_family, p->ai_socktype, p->ai_protocol))
-== -1) {
-perror("socket");
-continue;
-}
-
-if (connect(sock, p->ai_addr, p->ai_addrlen) == -1) {
-close(sock);
-perror("connect");
-continue;
-}
-
-break;
-
+	if ((sock = socket(p->ai_family, p->ai_socktype, p->ai_protocol))
+	    == -1) {
+	    perror("socket");
+	    continue;
+	}
+	
+	if (connect(sock, p->ai_addr, p->ai_addrlen) == -1) {
+	    close(sock);
+	    perror("connect");
+	    continue;
+	}
+	break;	
     }
     
     if (p == NULL) {
-fprintf(stderr, "[-] %s failed to connect\n", client);
-return 2;
+	fprintf(stderr, "[-] %s failed to connect\n", client);
+	return 2;
     }
     
     inet_ntop(p->ai_family, getinaddr((struct sockaddr *) p->ai_addr), s,
-sizeof (s));
+	      sizeof (s));
     printf("[+] %s connecting to %s", client, host);
     freeaddrinfo(servinfo);
-
+    
     char nick[MSGBUF] = {0};
     char channel[MSGBUF] = {0};
     char sendbuf[MSGBUF] = {0};
