@@ -1,11 +1,13 @@
 /*
-* socket operations.
+* file: sock.c
+* synopsis: socket based operations
 */
 
 #include "sock.h"
 
-/* Get socketaddr (for ip4/ip6)
-*/
+/* 
+ * In file definitions
+ */
 
 static void *getinaddr(struct sockaddr *sa);
 static int to_send(char *, int);
@@ -15,24 +17,27 @@ static void privmsg(const char *, char *, char *, int);
 static void joinmsg(const char *, char *, int);
 static int getl(char *);
 
+
+/*
+ * Get sockaddr for ip4 or ip6 
+ */
+
 static void *
 getinaddr(struct sockaddr *sa)
 {
     if (sa->sa_family == AF_INET) {
-return &(((struct sockaddr_in *) sa)->sin_addr);
+	return &(((struct sockaddr_in *) sa)->sin_addr);
     }
-
+    
     return &(((struct sockaddr_in6 *) sa)->sin6_addr);
 }
 
 int
 handler(char *client, char *host, char *port)
 {
-    int sock, bytes;
-    char buf[MAXBUF] = {0};
+    int sock, bytes, rv;
+    char buf[MAXBUF] = {0}, s[INET6_ADDRSTRLEN] = {0};
     struct addrinfo hints, *servinfo, *p;
-    int rv;
-    char s[INET6_ADDRSTRLEN] = {0};
     
     memset(&hints, 0, sizeof (hints));
     hints.ai_family = AF_UNSPEC;
@@ -74,12 +79,12 @@ handler(char *client, char *host, char *port)
     char sendbuf[MSGBUF] = {0};
     char privmsg_buffer[MSGBUF] = {0};
     char passbuf[_SC_PASS_MAX] = {0};
-
+    
     printf("\n[+] NICK: ");
     getl(nick);
     printf("[+] CHANNEL: ");
     getl(channel);
-
+    
     usermsg(nick, nick, sendbuf, sock);
     nickmsg(nick, sendbuf, sock);
     
@@ -104,11 +109,11 @@ static void
 usermsg(char *nick, char *nickname, char *sendbuf, int sock)
 {
     snprintf(sendbuf, sizeof (MAXBUF), "USER %s \"\" \"127.0.0.1\" :%s\r\n",
-nick, nickname);
+	     nick, nickname);
     to_send(sendbuf, sock);
     return;
 }
-    
+
 static void
 nickmsg(char *nick, char *sendbuf, int sock)
 {
@@ -132,7 +137,7 @@ joinmsg(const char *channel, char *sendbuf, int sock)
     to_send(sendbuf, sock);
     return;
 }
- 
+
 static int
 to_send(char *msg, int sock)
 {
@@ -140,8 +145,8 @@ to_send(char *msg, int sock)
     
     check = send(sock, msg, strlen(msg), 0);
     if (check == -1) {
-perror("[-] send");
-return -1;
+	perror("[-] send");
+	return -1;
     }
     
     return 0;
@@ -153,10 +158,10 @@ getl(char *s)
     int c, d;
     
     for (d = 0; d < MAX-1 && ((c = getchar()) != EOF) &&
-c != '\n'; ++d)
-s[d] = c;
+	     c != '\n'; ++d)
+	s[d] = c;
     if (c == '\n')
-s[d++] = c;
+	s[d++] = c;
     s[d] = '\0';
     
     return d;
