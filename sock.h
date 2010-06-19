@@ -13,7 +13,4 @@
 #define MAX 100
 #define MSGBUF 100
 
-#define nick "fagbot"
-#define channel "##fagbot"
-
 int handler(char *, char *, char *);
