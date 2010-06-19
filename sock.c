@@ -28,14 +28,6 @@ handler(char *client, char *host, char *port)
     struct addrinfo hints, *servinfo, *p;
     int rv;
     char s[INET6_ADDRSTRLEN] = {0};
-
-    if (host == NULL) {
-	host = "irc.gnu.org";
-    }
-    
-    if (port == NULL) {
-	port = "6667"; /* Default port */
-    }
     
     memset(&hints, 0, sizeof (hints));
     hints.ai_family = AF_UNSPEC;
