@@ -96,7 +96,7 @@ handler(char *client, char *host, char *port)
 }
 
 static void 
-usermsg(char *nick, char *nick, char *sendbuf, int sock)
+usermsg(char *nick, char *nick, char *sendbuf, int sock) 
 {
     snprintf(sendbuf, sizeof (MAXBUF), "USER %s \"\" \"127.0.0.1\" :%s\r\n", 
 	     nick, nick);
