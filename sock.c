@@ -87,7 +87,7 @@ handler(char *client, char *host, char *port)
     char sendbuf[MSGBUF] = {0};
     char privmsg_buffer[MSGBUF] = {0};
     char passbuf[_SC_PASS_MAX] = {0};
-    
+  
     printf("\n[+] NICK: ");
     getl(nick);
     printf("[+] CHANNEL: ");
@@ -95,27 +95,31 @@ handler(char *client, char *host, char *port)
     
     usermsg(nick, nick, sendbuf, sock);
     nickmsg(nick, sendbuf, sock);
-    
-    while ((bytes = recv(sock, buf, MAXBUF - 1, 0)) != -1) {
-	buf[bytes] = '\0';
-	bytes = 0;
-	printf("%s", buf);
-    }
-    
+
+    usleep(10);
+
     privmsg("nickserv", getpass(passbuf), sendbuf, sock);
     joinmsg(channel, sendbuf, sock);
+    privmsg(channel, "HELLO ##CLUB-UBUNTU I AM NAKBOT", sendbuf, sock);
+
+    while ((bytes = recv(sock, buf, MAXBUF - 1, 0)) != -1) {
+	    buf[bytes] = '\0';
+	    bytes = 0;
+	    printf("%s", buf);
+    }
     
     while (getl(privmsg_buffer) != 0)
 	privmsg(channel, privmsg_buffer, sendbuf, sock);
+
     close(sock);
     
     return 0;
 }
 
 static void
-usermsg(char *nick, char *nickname, char *sendbuf, int sock)
+usermsg(char *nick, char *sendbuf, char *nickname, int sock)
 {
-    snprintf(sendbuf, sizeof (MAXBUF), "USER %s \"\" \"127.0.0.1\" :%s\r\n",
+    snprintf(sendbuf, MAXBUF, "USER %s \"\" \"127.0.0.1\" :%s\r\n",
 	     nick, nickname);
     to_send(sendbuf, sock);
     return;
@@ -124,7 +128,7 @@ usermsg(char *nick, char *nickname, char *sendbuf, int sock)
 static void
 nickmsg(char *nick, char *sendbuf, int sock)
 {
-    snprintf(sendbuf, sizeof (MAXBUF), "NICK %s\r\n", nick);
+    snprintf(sendbuf, MAXBUF, "NICK %s\r\n", nick);
     to_send(sendbuf, sock);
     return;
 }
@@ -132,7 +136,7 @@ nickmsg(char *nick, char *sendbuf, int sock)
 static void
 privmsg(const char *send_to, char *pass, char *sendbuf, int sock)
 {
-    snprintf(sendbuf, sizeof (MAXBUF), "PRIVMSG %s: %s\r\n", send_to, pass);
+    snprintf(sendbuf, MAXBUF, "PRIVMSG %s: %s\r\n", send_to, pass);
     to_send(sendbuf, sock);
     return;
 }
@@ -140,7 +144,7 @@ privmsg(const char *send_to, char *pass, char *sendbuf, int sock)
 static void
 joinmsg(const char *channel, char *sendbuf, int sock)
 {
-    sprintf(sendbuf, "JOIN %s\r\n", channel);
+    snprintf(sendbuf, MAXBUF, "JOIN %s\r\n", channel);
     to_send(sendbuf, sock);
     return;
 }
