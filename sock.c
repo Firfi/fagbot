@@ -95,12 +95,11 @@ handler(char *client, char *host, char *port)
     
     usermsg(nick, nick, sendbuf, sock);
     nickmsg(nick, sendbuf, sock);
-
     usleep(10);
-
-    privmsg("nickserv", getpass(passbuf), sendbuf, sock);
     joinmsg(channel, sendbuf, sock);
-    privmsg(channel, "HELLO ##CLUB-UBUNTU I AM NAKBOT", sendbuf, sock);
+
+    char *msgsend = "hello";
+    privmsg(channel, msgsend, sendbuf, sock);
 
     while ((bytes = recv(sock, buf, MAXBUF - 1, 0)) != -1) {
 	    buf[bytes] = '\0';
@@ -136,7 +135,7 @@ nickmsg(char *nick, char *sendbuf, int sock)
 static void
 privmsg(const char *send_to, char *pass, char *sendbuf, int sock)
 {
-    snprintf(sendbuf, MAXBUF, "PRIVMSG %s: %s\r\n", send_to, pass);
+    snprintf(sendbuf, MAXBUF, "PRIVMSG %s %s\r\n", send_to, pass);
     to_send(sendbuf, sock);
     return;
 }

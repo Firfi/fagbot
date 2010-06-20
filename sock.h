@@ -9,8 +9,8 @@
 #include <limits.h>
 
 /* Yes, these are all the same */
-#define MAXBUF 100
-#define MAX 100
-#define MSGBUF 100
+#define MAXBUF 8192
+#define MAX 8192
+#define MSGBUF 8192
 
 int handler(char *, char *, char *);
